@@ -7,26 +7,17 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-
 import appCss from "../styles.css?url";
+import { SiteHeader } from "@/components/SiteHeader";
+import { useCartSync } from "@/hooks/useCartSync";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+        <h1 className="font-display text-7xl">404</h1>
+        <p className="mt-3 text-sm text-muted-foreground tracking-wide">This page has wandered from the atelier.</p>
+        <Link to="/" className="mt-6 inline-block text-xs uppercase tracking-[0.2em] underline underline-offset-4">Return to Maison</Link>
       </div>
     </div>
   );
@@ -35,33 +26,15 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+        <h1 className="font-display text-2xl">Something interrupted us</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <button
+          onClick={() => { router.invalidate(); reset(); }}
+          className="mt-6 px-6 py-2 bg-[var(--ink)] text-primary-foreground text-xs uppercase tracking-widest"
+        >Try again</button>
       </div>
     </div>
   );
@@ -72,20 +45,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Danasef — Luxury Modest Wear | Niqabs, Abayas & Hijabs Pakistan" },
+      { name: "description", content: "Danasef crafts luxury modest fashion for the modern Muslim woman. Premium niqabs, abayas, hijabs and fragrances. Shipped across Pakistan." },
+      { name: "theme-color", content: "#1B262C" },
+      { property: "og:site_name", content: "Danasef" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:title", content: "Danasef — Luxury Modest Wear" },
+      { property: "og:description", content: "Premium niqabs, abayas, hijabs & fragrances. Modest fashion, redefined." },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -97,23 +70,50 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
+      <head><HeadContent /></head>
+      <body>{children}<Scripts /></body>
     </html>
   );
 }
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AppShell />
     </QueryClientProvider>
+  );
+}
+
+function AppShell() {
+  useCartSync();
+  return (
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main className="flex-1"><Outlet /></main>
+      <footer className="border-t border-border/60 mt-24">
+        <div className="mx-auto max-w-7xl px-6 py-12 grid md:grid-cols-3 gap-8 text-sm">
+          <div>
+            <h3 className="font-display text-xl tracking-[0.3em] uppercase">Danasef</h3>
+            <p className="mt-3 text-muted-foreground text-xs leading-relaxed">Luxury modest wear, crafted in Pakistan for women who carry their faith with grace.</p>
+          </div>
+          <div>
+            <h4 className="text-xs uppercase tracking-widest mb-3">Maison</h4>
+            <ul className="space-y-2 text-xs text-muted-foreground">
+              <li><Link to="/collection">Collection</Link></li>
+              <li><Link to="/about">Heritage</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs uppercase tracking-widest mb-3">Care</h4>
+            <ul className="space-y-2 text-xs text-muted-foreground">
+              <li>Shipping across Pakistan</li>
+              <li>WhatsApp support</li>
+            </ul>
+          </div>
+        </div>
+        <div className="border-t border-border/60 py-4 text-center text-[10px] tracking-[0.2em] uppercase text-muted-foreground">© {new Date().getFullYear()} Danasef Atelier</div>
+      </footer>
+    </div>
   );
 }
