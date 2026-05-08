@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;700&display=swap');
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -33,7 +38,7 @@
   --color-azure: var(--azure);
   --color-mist: var(--mist);
   --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
 }
 
 :root {
@@ -92,6 +97,80 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
+    font-size: 16px;
+    line-height: 1.6;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1 { font-family: var(--font-display); font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+  h2 { font-family: var(--font-display); font-size: 2.75rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 1.25rem; }
+  h3 { font-family: var(--font-display); font-size: 2rem; font-weight: 600; letter-spacing: -0.005em; margin-bottom: 1rem; }
+  h4 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+  p { font-size: 1.125rem; line-height: 1.75; }
+  a { color: var(--color-primary); text-decoration: none; transition: color 0.3s ease; }
+  a:hover { color: var(--color-accent); }
+}
+
+@layer components {
+  .product-card {
+    @apply relative overflow-hidden rounded-lg bg-white dark:bg-slate-800 shadow-lg transition-all duration-500 ease-out hover:shadow-2xl hover:scale-105 group cursor-pointer;
+  }
+  
+  .product-card-image {
+    @apply relative h-80 w-full overflow-hidden bg-gray-100 dark:bg-gray-700 transition-transform duration-700 ease-out group-hover:scale-110;
+  }
+  
+  .product-card-content {
+    @apply p-6 space-y-3;
+  }
+  
+  .product-card-title {
+    @apply text-xl font-bold text-ink dark:text-white transition-colors duration-300 group-hover:text-azure;
+  }
+  
+  .product-card-price {
+    @apply text-2xl font-bold text-azure dark:text-mist;
+  }
+  
+  .filter-badge {
+    @apply inline-block px-4 py-2 rounded-full bg-secondary text-ink dark:bg-slate-700 dark:text-white font-semibold text-sm transition-all duration-300 hover:bg-accent hover:text-white cursor-pointer;
+  }
+  
+  .btn-primary {
+    @apply px-8 py-3 bg-ink text-white font-semibold rounded-lg transition-all duration-300 hover:bg-azure hover:shadow-lg hover:scale-105 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply px-8 py-3 bg-secondary text-ink font-semibold rounded-lg transition-all duration-300 hover:bg-accent hover:text-white hover:shadow-lg;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border-2 border-border dark:border-slate-600 bg-white dark:bg-slate-700 text-ink dark:text-white focus:outline-none focus:border-azure focus:ring-2 focus:ring-azure/30 transition-all duration-200;
+  }
+  
+  .fade-in-up {
+    @apply animate-in fade-in slide-in-from-bottom-6 duration-500;
+  }
+  
+  .slide-in-right {
+    @apply animate-in fade-in slide-in-from-right-12 duration-700;
+  }
+  
+  .bounce-subtle {
+    animation: subtle-bounce 2s infinite ease-in-out;
+  }
+}
+
+@keyframes subtle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+  background-size: 1000px 100%;
 }

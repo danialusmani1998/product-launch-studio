@@ -1,82 +1,247 @@
-export const SHOPIFY_API_VERSION = '2025-07';
-export const SHOPIFY_STORE_PERMANENT_DOMAIN = 'dxbnxp-ed.myshopify.com';
-export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
-export const SHOPIFY_STOREFRONT_TOKEN = 'e37435788bbfe898de3f73db085841fa';
-
+// Shopify API Integration
 export interface ShopifyProduct {
-  node: {
-    id: string;
-    title: string;
-    description: string;
-    descriptionHtml?: string;
-    handle: string;
-    productType?: string;
-    tags?: string[];
-    priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
-    images: { edges: Array<{ node: { url: string; altText: string | null } }> };
-    variants: {
-      edges: Array<{
-        node: {
-          id: string;
-          title: string;
-          price: { amount: string; currencyCode: string };
-          availableForSale: boolean;
-          selectedOptions: Array<{ name: string; value: string }>;
-        };
-      }>;
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  featuredImage?: {
+    url: string;
+    alt: string;
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
     };
-    options: Array<{ name: string; values: string[] }>;
+  };
+  collections?: {
+    nodes: Array<{
+      handle: string;
+      title: string;
+    }>;
+  };
+  tags?: string[];
+}
+
+export interface ShopifyCollection {
+  id: string;
+  handle: string;
+  title: string;
+  description: string;
+  image?: {
+    url: string;
+    alt: string;
+  };
+  products: {
+    nodes: ShopifyProduct[];
   };
 }
 
-export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-  if (response.status === 402) {
-    console.error('Shopify: Payment required');
+const SHOPIFY_STORE_URL = process.env.VITE_SHOPIFY_STORE_URL || 'https://your-store.myshopify.com';
+const SHOPIFY_ACCESS_TOKEN = process.env.VITE_SHOPIFY_ACCESS_TOKEN || '';
+
+const graphqlQuery = async (query: string, variables?: Record<string, unknown>) => {
+  try {
+    const response = await fetch(`${SHOPIFY_STORE_URL}/api/2024-01/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_ACCESS_TOKEN,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+    return response.json();
+  } catch (error) {
+    console.error('Shopify API Error:', error);
     return null;
   }
-  if (!response.ok) throw new Error(`Shopify HTTP ${response.status}`);
-  const data = await response.json();
-  if (data.errors) throw new Error(data.errors.map((e: { message: string }) => e.message).join(', '));
-  return data;
-}
+};
 
-const PRODUCT_FIELDS = `
-  id title description descriptionHtml handle productType tags
-  priceRange { minVariantPrice { amount currencyCode } }
-  images(first: 8) { edges { node { url altText } } }
-  variants(first: 20) {
-    edges { node {
-      id title availableForSale
-      price { amount currencyCode }
-      selectedOptions { name value }
-    } }
-  }
-  options { name values }
-`;
+export const shopifyAPI = {
+  async getProducts(first = 20, query = '') {
+    const gqlQuery = `
+      query GetProducts($first: Int!, $query: String) {
+        products(first: $first, query: $query) {
+          nodes {
+            id
+            title
+            handle
+            description
+            featuredImage {
+              url
+              alt
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            tags
+          }
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery, { first, query });
+    return data?.data?.products?.nodes || [];
+  },
 
-export const PRODUCTS_QUERY = `
-  query GetProducts($first: Int!, $query: String) {
-    products(first: $first, query: $query) {
-      edges { node { ${PRODUCT_FIELDS} } }
-    }
-  }
-`;
+  async getProductByHandle(handle: string) {
+    const gqlQuery = `
+      query GetProduct($handle: String!) {
+        productByHandle(handle: $handle) {
+          id
+          title
+          handle
+          description
+          descriptionHtml
+          featuredImage {
+            url
+            alt
+          }
+          images(first: 10) {
+            nodes {
+              url
+              alt
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          variants(first: 10) {
+            nodes {
+              id
+              title
+              selectedOptions {
+                name
+                value
+              }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+          collections(first: 5) {
+            nodes {
+              handle
+              title
+            }
+          }
+          tags
+          metafields(identifiers: [
+            { namespace: "custom", key: "seo_title" }
+            { namespace: "custom", key: "seo_description" }
+          ]) {
+            key
+            value
+          }
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery, { handle });
+    return data?.data?.productByHandle || null;
+  },
 
-export const PRODUCT_BY_HANDLE_QUERY = `
-  query GetProduct($handle: String!) {
-    product(handle: $handle) { ${PRODUCT_FIELDS} }
-  }
-`;
+  async getCollections() {
+    const gqlQuery = `
+      query GetCollections {
+        collections(first: 20) {
+          nodes {
+            id
+            handle
+            title
+            description
+            image {
+              url
+              alt
+            }
+          }
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery);
+    return data?.data?.collections?.nodes || [];
+  },
 
-export function formatPrice(amount: string | number, currency = 'PKR') {
-  const n = typeof amount === 'string' ? parseFloat(amount) : amount;
-  return new Intl.NumberFormat('en-PK', { style: 'currency', currency, maximumFractionDigits: 0 }).format(n);
-}
+  async getCollectionByHandle(handle: string, first = 20) {
+    const gqlQuery = `
+      query GetCollection($handle: String!, $first: Int!) {
+        collectionByHandle(handle: $handle) {
+          id
+          handle
+          title
+          description
+          descriptionHtml
+          image {
+            url
+            alt
+          }
+          products(first: $first) {
+            nodes {
+              id
+              title
+              handle
+              description
+              featuredImage {
+                url
+                alt
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              tags
+            }
+          }
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery, { handle, first });
+    return data?.data?.collectionByHandle || null;
+  },
+
+  async getCustomerAccessTokenCreate(email: string, password: string) {
+    const gqlQuery = `
+      mutation CreateAccessToken($input: CustomerAccessTokenCreateInput!) {
+        customerAccessTokenCreate(input: $input) {
+          customerAccessToken {
+            accessToken
+            expiresAt
+          }
+          customerUserErrors {
+            code
+            field
+            message
+          }
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery, {
+      input: { email, password },
+    });
+    return data?.data?.customerAccessTokenCreate || null;
+  },
+
+  async getCustomer(accessToken: string) {
+    const gqlQuery = `
+      query GetCustomer($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
+          id
+          firstName
+          lastName
+          email
+          phone
+          createdAt
+        }
+      }
+    `;
+    const data = await graphqlQuery(gqlQuery, { customerAccessToken: accessToken });
+    return data?.data?.customer || null;
+  },
+};
