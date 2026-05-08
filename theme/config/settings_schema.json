@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary Color",
+        "default": "#10b981"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "Secondary Color",
+        "default": "#1f2937"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent Color",
+        "default": "#0ea5e9"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "text",
+        "id": "primary_font",
+        "label": "Primary Font",
+        "default": "Helvetica, Arial, sans-serif"
+      },
+      {
+        "type": "text",
+        "id": "heading_font",
+        "label": "Heading Font",
+        "default": "Helvetica, Arial, sans-serif"
+      }
+    ]
+  },
+  {
+    "name": "Store Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "store_name",
+        "label": "Store Name",
+        "default": "Premium Store"
+      },
+      {
+        "type": "text",
+        "id": "store_description",
+        "label": "Store Description",
+        "default": "Welcome to our premium online store"
+      }
+    ]
+  }
+]

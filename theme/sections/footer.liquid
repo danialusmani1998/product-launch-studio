@@ -1,0 +1,57 @@
+{% comment %}
+  Footer Section with Links and Legal Pages
+{% endcomment %}
+
+<footer style="background: #1f2937; color: white; padding: 3rem 1rem; margin-top: 4rem;">
+  <div style="max-width: 1280px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+      <!-- About -->
+      <div>
+        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">{{ shop.name }}</h3>
+        <p style="color: #d1d5db; font-size: 0.875rem; line-height: 1.6;">{{ shop.description }}</p>
+      </div>
+
+      <!-- Shop Links -->
+      <div>
+        <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Shop</h4>
+        <ul style="list-style: none;">
+          <li><a href="/collections/all" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">All Products</a></li>
+          {% for collection in shop.collections limit: 5 %}
+            <li><a href="{{ collection.url }}" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">{{ collection.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Customer Service -->
+      <div>
+        <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Customer Service</h4>
+        <ul style="list-style: none;">
+          <li><a href="/pages/contact" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Contact Us</a></li>
+          <li><a href="/pages/faq" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">FAQ</a></li>
+          <li><a href="/pages/shipping" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Shipping Info</a></li>
+          <li><a href="/pages/returns" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Returns</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Legal</h4>
+        <ul style="list-style: none;">
+          <li><a href="/pages/privacy-policy" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Privacy Policy</a></li>
+          <li><a href="/pages/terms-of-service" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Terms & Conditions</a></li>
+          <li><a href="/pages/cookie-policy" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div style="border-top: 1px solid #374151; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <p style="color: #d1d5db; font-size: 0.875rem;">&copy; 2024 {{ shop.name }}. All rights reserved.</p>
+      <div style="display: flex; gap: 1rem;">
+        <a href="#" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Facebook</a>
+        <a href="#" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Instagram</a>
+        <a href="#" style="color: #d1d5db; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#d1d5db'">Twitter</a>
+      </div>
+    </div>
+  </div>
+</footer>

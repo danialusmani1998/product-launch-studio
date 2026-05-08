@@ -1,0 +1,54 @@
+{% comment %}
+  Header Section with Navigation
+{% endcomment %}
+
+<header style="background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <!-- Logo -->
+    <a href="/" style="font-size: 1.5rem; font-weight: 700; color: #10b981; text-decoration: none;">
+      {{ shop.name }}
+    </a>
+
+    <!-- Navigation -->
+    <nav style="display: flex; gap: 2rem; align-items: center; font-weight: 600;">
+      <a href="/collections/all" style="color: #1f2937; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#1f2937'">
+        Shop All
+      </a>
+      {% for link in linklists.main-menu.links %}
+        <a href="{{ link.url }}" style="color: #1f2937; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#1f2937'">
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    </nav>
+
+    <!-- Right Actions -->
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+      <!-- Account -->
+      {% if customer %}
+        <a href="/account" style="color: #1f2937; font-weight: 600; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#1f2937'">
+          👤 Account
+        </a>
+        <a href="/account/logout" style="color: #ef4444; font-weight: 600; text-decoration: none;">
+          Logout
+        </a>
+      {% else %}
+        <a href="/account/login" style="color: #1f2937; font-weight: 600; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#1f2937'">
+          🔐 Login
+        </a>
+        <a href="/account/register" style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Sign Up
+        </a>
+      {% endif %}
+
+      <!-- Cart -->
+      <a href="/cart" style="color: #1f2937; font-weight: 600; text-decoration: none; position: relative; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#1f2937'">
+        🛒 Cart
+        {% if cart.item_count > 0 %}
+          <span style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+            {{ cart.item_count }}
+          </span>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</header>

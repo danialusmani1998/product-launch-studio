@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="{{ shop.locale | iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ page_description | escape }}">
+  <meta name="keywords" content="store, shop, products, online store">
+  <meta name="theme-color" content="#10b981">
+  
+  <!-- SEO Meta Tags -->
+  <title>{{ page_title }}{% if page_title != shop.name %} - {{ shop.name }}{% endif %}</title>
+  <link rel="canonical" href="{{ canonical_url }}">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:description" content="{{ page_description | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="{{ shop.featured_image | image_url: width: 1200, height: 630 }}">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title | escape }}">
+  <meta name="twitter:description" content="{{ page_description | escape }}">
+  <meta name="twitter:image" content="{{ shop.featured_image | image_url: width: 1200, height: 630 }}">
+  
+  <!-- Preconnect to external services -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="{{ 'cdn.shopify.com' | prepend: 'https://' }}">
+  
+  <!-- Fonts -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Helvetica:wght@400;600;700&display=swap');
+  </style>
+  
+  {{ content_for_header }}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+</head>
+<body>
+  {% section 'header' %}
+  
+  <main role="main" style="min-height: 100vh;">
+    {{ content_for_layout }}
+  </main>
+  
+  {% section 'footer' %}
+  
+  {{ 'seo.js' | asset_url | script_tag }}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.optimizeImages) window.optimizeImages();
+    });
+  </script>
+</body>
+</html>

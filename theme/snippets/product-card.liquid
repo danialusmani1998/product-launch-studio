@@ -1,0 +1,67 @@
+{% comment %}
+  Product Card Component with Modern Design and Animations
+{% endcomment %}
+
+<div class="product-card animate-in">
+  <div class="product-image-wrapper">
+    {% if product.featured_image %}
+      <img
+        src="{{ product.featured_image | img_url: '500x500' }}"
+        alt="{{ product.title }}"
+        class="product-image"
+        loading="lazy"
+      />
+    {% endif %}
+
+    {% if product.compare_at_price > product.price %}
+      <span class="product-discount">
+        -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}%
+      </span>
+    {% endif %}
+
+    {% if product.tags contains 'new' %}
+      <span class="product-badge">New</span>
+    {% endif %}
+  </div>
+
+  <div class="product-info">
+    <h3 class="product-title" title="{{ product.title }}">
+      {{ product.title }}
+    </h3>
+
+    {% if product.metafields.reviews.rating %}
+      <div class="product-rating">
+        <span class="product-stars">
+          {% for i in (1..5) %}
+            {% if i <= product.metafields.reviews.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </span>
+        <span class="product-reviews">
+          ({{ product.metafields.reviews.rating_count | default: '100' }})
+        </span>
+      </div>
+    {% endif %}
+
+    <div class="product-price">
+      <span class="product-price-current">
+        {{ product.price | money }}
+      </span>
+      {% if product.compare_at_price %}
+        <span class="product-price-original">
+          {{ product.compare_at_price | money }}
+        </span>
+      {% endif %}
+    </div>
+
+    <form action="/cart/add" method="post" class="mt-auto">
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="btn btn-primary">
+        🛒 Add to Cart
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+{% comment %}
+  Page Template for Static Pages like Terms & Conditions, Privacy Policy
+{% endcomment %}
+
+{% seo %}
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+  {% include 'breadcrumb' %}
+
+  <article style="max-width: 900px; margin: 0 auto;">
+    <h1 style="font-size: 2.25rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">{{ page.title }}</h1>
+    
+    {% if page.metafields.custom.description %}
+      <p style="color: #6b7280; font-size: 1.125rem; margin-bottom: 2rem; line-height: 1.8;">
+        {{ page.metafields.custom.description }}
+      </p>
+    {% endif %}
+
+    <div style="color: #4b5563; line-height: 1.8; font-size: 1rem;">
+      {{ page.content }}
+    </div>
+
+    <!-- Last Updated -->
+    {% if page.published_at %}
+      <div style="border-top: 1px solid #e5e7eb; margin-top: 3rem; padding-top: 2rem;">
+        <p style="color: #9ca3af; font-size: 0.875rem;">
+          Last updated: {{ page.published_at | date: '%B %d, %Y' }}
+        </p>
+      </div>
+    {% endif %}
+  </article>
+</div>

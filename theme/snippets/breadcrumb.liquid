@@ -1,0 +1,20 @@
+{% comment %}
+  Breadcrumb Navigation
+{% endcomment %}
+
+<nav style="display: flex; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #6b7280; margin-bottom: 2rem;" aria-label="Breadcrumb">
+  <a href="/" style="color: #6b7280; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">
+    🏠 Home
+  </a>
+  {% if template.name == 'collection' %}
+    <span>›</span>
+    <span style="color: #1f2937;">{{ collection.title }}</span>
+  {% elsif template.name == 'product' %}
+    <span>›</span>
+    <a href="/collections/{{ product.collections.first.handle }}" style="color: #6b7280; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">
+      {{ product.collections.first.title }}
+    </a>
+    <span>›</span>
+    <span style="color: #1f2937;">{{ product.title }}</span>
+  {% endif %}
+</nav>

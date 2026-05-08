@@ -1,0 +1,103 @@
+{% comment %}
+  Product Template with SEO and Rich Data
+{% endcomment %}
+
+{% seo %}
+
+<div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+  {% include 'breadcrumb' %}
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem;">
+    <!-- Product Image -->
+    <div>
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | img_url: '600x600' }}" alt="{{ product.title }}" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;">
+      {% endif %}
+      {% if product.images.size > 1 %}
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+          {% for image in product.images %}
+            <img src="{{ image | img_url: '150x150' }}" alt="{{ product.title }}" style="width: 100%; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onmouseover="this.parentElement.parentElement.parentElement.querySelector('img').src='{{ image | img_url: '600x600' }}'; this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Product Details -->
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem;">{{ product.title }}</h1>
+      
+      <!-- Price -->
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-size: 1.5rem;">
+        <span style="font-weight: 700; color: #1f2937;">{{ product.price | money }}</span>
+        {% if product.compare_at_price %}
+          <span style="color: #9ca3af; text-decoration: line-through;">{{ product.compare_at_price | money }}</span>
+          <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
+            -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}%
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Rating -->
+      {% if product.metafields.reviews.rating %}
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="color: #fbbf24; font-size: 1.125rem;">
+            {% for i in (1..5) %}
+              {% if i <= product.metafields.reviews.rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </div>
+          <span style="color: #6b7280;">({{ product.metafields.reviews.rating_count | default: '100' }} reviews)</span>
+        </div>
+      {% endif %}
+
+      <!-- Description -->
+      {% if product.description %}
+        <div style="color: #4b5563; line-height: 1.8; margin-bottom: 2rem;">
+          {{ product.description }}
+        </div>
+      {% endif %}
+
+      <!-- Variants -->
+      {% if product.variants.size > 1 %}
+        <div style="margin-bottom: 2rem;">
+          {% for option in product.options %}
+            <label style="display: block; margin-bottom: 0.75rem; font-weight: 700; color: #1f2937;">{{ option }}</label>
+            <select name="options[{{ option }}]" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 1rem; font-weight: 600;">
+              {% assign option_index = forloop.index0 %}
+              {% for variant in product.variants %}
+                <option value="{{ variant.options[option_index] }}">{{ variant.options[option_index] }}</option>
+              {% endfor %}
+            </select>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Add to Cart Form -->
+      <form action="/cart/add" method="post" style="margin-bottom: 2rem;">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.125rem;">
+          🛒 Add to Cart
+        </button>
+      </form>
+
+      <!-- Product Details -->
+      <div style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+        <p style="color: #6b7280; margin-bottom: 0.75rem;"><strong>SKU:</strong> {{ product.selected_or_first_available_variant.sku }}</p>
+        <p style="color: #6b7280; margin-bottom: 0.75rem;"><strong>Brand:</strong> {{ product.vendor }}</p>
+        <p style="color: #6b7280; margin-bottom: 0.75rem;"><strong>Availability:</strong> {% if product.available %}<span style="color: #10b981; font-weight: 700;">In Stock</span>{% else %}<span style="color: #ef4444; font-weight: 700;">Out of Stock</span>{% endif %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  if (window.injectProductSchema) {
+    window.injectProductSchema({{ product | json }});
+  }
+  if (window.injectBreadcrumbSchema) {
+    window.injectBreadcrumbSchema([
+      { name: 'Home', url: '{{ shop.url }}' },
+      { name: '{{ product.collections.first.title }}', url: '{{ product.collections.first.url }}' },
+      { name: '{{ product.title }}', url: '{{ product.url }}' }
+    ]);
+  }
+</script>

@@ -1,0 +1,55 @@
+{% comment %}
+  Account Page Template
+{% endcomment %}
+
+{% if customer %}
+  <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="font-size: 2.25rem; font-weight: 700; color: #1f2937; margin-bottom: 2rem;">Welcome, {{ customer.first_name }}! 👋</h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+      <!-- Account Info -->
+      <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Account Information</h2>
+        <p style="color: #6b7280; margin-bottom: 0.5rem;"><strong>Email:</strong> {{ customer.email }}</p>
+        <p style="color: #6b7280; margin-bottom: 1rem;"><strong>Name:</strong> {{ customer.first_name }} {{ customer.last_name }}</p>
+        <a href="{{ customer.account_url }}/edit" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.3s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Edit Account
+        </a>
+      </div>
+
+      <!-- Order History -->
+      <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Recent Orders</h2>
+        {% if customer.orders.size > 0 %}
+          <p style="color: #6b7280; margin-bottom: 1rem;">Total Orders: <strong>{{ customer.orders.size }}</strong></p>
+          <a href="{{ customer.account_url }}/orders" style="background: #0ea5e9; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.3s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            View All Orders
+          </a>
+        {% else %}
+          <p style="color: #9ca3af;">No orders yet</p>
+        {% endif %}
+      </div>
+
+      <!-- Addresses -->
+      <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Addresses</h2>
+        {% if customer.addresses.size > 0 %}
+          <p style="color: #6b7280; margin-bottom: 1rem;">Total Addresses: <strong>{{ customer.addresses.size }}</strong></p>
+          <a href="{{ customer.account_url }}/addresses" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.3s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            Manage Addresses
+          </a>
+        {% else %}
+          <p style="color: #9ca3af;">No addresses saved</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+    <h1 style="font-size: 2.25rem; font-weight: 700; color: #1f2937; margin-bottom: 2rem;">Account</h1>
+    <p style="color: #6b7280; margin-bottom: 2rem;">Please log in to view your account</p>
+    <a href="/account/login" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 700;">
+      Log In
+    </a>
+  </div>
+{% endif %}

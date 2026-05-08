@@ -1,0 +1,63 @@
+{% comment %}
+  Product Filters Component
+{% endcomment %}
+
+<div class="filter-section">
+  <div class="filter-title" onclick="this.parentElement.querySelector('.filter-options').style.display = this.parentElement.querySelector('.filter-options').style.display === 'none' ? 'flex' : 'none'">
+    <span>Sort & Filter</span>
+    <span>⬇️</span>
+  </div>
+
+  <div class="filter-options" style="display: none;">
+    <!-- Sort -->
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; font-weight: 700; margin-bottom: 0.75rem;">Sort By</label>
+      <select name="sort_by" onchange="window.location.href = this.value" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #e5e7eb; font-weight: 600;">
+        <option value="?sort_by=manual">Recommended</option>
+        <option value="?sort_by=title-ascending">Name: A to Z</option>
+        <option value="?sort_by=title-descending">Name: Z to A</option>
+        <option value="?sort_by=price-ascending">Price: Low to High</option>
+        <option value="?sort_by=price-descending">Price: High to Low</option>
+        <option value="?sort_by=created-descending">Newest</option>
+      </select>
+    </div>
+
+    <!-- Price Filter -->
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+      <label style="display: block; font-weight: 700; margin-bottom: 0.75rem;">Price Range</label>
+      <div class="filter-options">
+        <div class="filter-option">
+          <input type="checkbox" id="price-under-50" name="filter.price" value="0-50">
+          <label for="price-under-50">Under $50</label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="price-50-100" name="filter.price" value="50-100">
+          <label for="price-50-100">$50 - $100</label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="price-100-200" name="filter.price" value="100-200">
+          <label for="price-100-200">$100 - $200</label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="price-200-plus" name="filter.price" value="200+">
+          <label for="price-200-plus">$200+</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Availability Filter -->
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: 1rem;">
+      <label style="display: block; font-weight: 700; margin-bottom: 0.75rem;">Availability</label>
+      <div class="filter-options">
+        <div class="filter-option">
+          <input type="checkbox" id="availability-in-stock" name="filter.availability" value="in-stock">
+          <label for="availability-in-stock">In Stock</label>
+        </div>
+        <div class="filter-option">
+          <input type="checkbox" id="availability-on-sale" name="filter.availability" value="on-sale">
+          <label for="availability-on-sale">On Sale</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
