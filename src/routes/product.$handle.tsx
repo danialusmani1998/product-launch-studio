@@ -65,7 +65,7 @@ function generateFAQs(p: ProductNode) {
 }
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product } = Route.useLoaderData() as { product: ProductNode };
   const p = product;
   const variants = p.variants.edges;
   const [variantId, setVariantId] = useState(variants[0]?.node.id ?? "");
